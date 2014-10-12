@@ -6,21 +6,21 @@ Ext.onReady(function(){
                 return("There are unsaved changes, press cancel if you want save your changes before exit");
         }
     };
-    
+
     setActiveStyleSheet('gray');
-    
+
     var tabPanelWest;
     var checkOutUrl;
     var appnamePath;
     var openNewProject;
     Ext.Ajax.timeout = 240000; //4 minutes
-    
+
     function onkeydown_handler(event){
         if (event.altKey)
             launchShortcut(event.which);
     }
-    
-    // Map 
+
+    // Map
     var map = new Ext.KeyMap(Ext.getDoc(), [
         {
             key: "f,o,s",
@@ -29,12 +29,12 @@ Ext.onReady(function(){
             scope: this,
             stopEvent:true
         }
-    ]);    
-    
+    ]);
+
     function launchShortcut(keyCode)
     {
         switch (keyCode)
-        { 
+        {
             case 70 : // 'F'
                     onButtonFindClick();
                 break;
@@ -47,7 +47,7 @@ Ext.onReady(function(){
         }
     }
 
-    
+
     Ext.ns('Ext.ux.tree');
     /**
     * Creates new TreeFilterX
@@ -56,34 +56,34 @@ Ext.onReady(function(){
     * @param {Object} config A config object of this filter
     */
     Ext.ux.tree.TreeFilterX = Ext.extend(Ext.tree.TreeFilter, {
-        
+
         // {{{
         /**
         * Filter the data by a specific attribute.
         *
-        * @param {String/RegExp} value Either string that the attribute value 
+        * @param {String/RegExp} value Either string that the attribute value
         * should start with or a RegExp to test against the attribute
         * @param {String} attr (optional) The attribute passed in your node's attributes collection. Defaults to "text".
         */
         filter:function(value, attr, startNode) {
-            
+
             var animate = this.tree.animate;
             this.tree.animate = false;
             this.tree.expand(startNode);
             this.tree.animate = animate;
             Ext.ux.tree.TreeFilterX.superclass.filter.apply(this, arguments);
-            
+
         } // eo function filter
         // }}}
         // {{{
         /**
-        * Filter by a function. The passed function will be called with each 
-        * node in the tree (or from the startNode). If the function returns true, the node is kept 
+        * Filter by a function. The passed function will be called with each
+        * node in the tree (or from the startNode). If the function returns true, the node is kept
         * otherwise it is filtered. If a node is filtered, its children are also filtered.
         * Shows parents of matching nodes.
         *
         * @param {Function} fn The filter function
-        * @param {Object} scope (optional) The scope of the function (defaults to the current node) 
+        * @param {Object} scope (optional) The scope of the function (defaults to the current node)
         */
         ,filterBy:function(fn, scope, startNode) {
             startNode = startNode || this.tree.root;
@@ -91,7 +91,7 @@ Ext.onReady(function(){
                 this.clear();
             }
             var af = this.filtered, rv = this.reverse;
-            
+
             var f = function(n) {
                 if(n === startNode) {
                     return true;
@@ -117,7 +117,7 @@ Ext.onReady(function(){
                 return true;
             };
             startNode.cascade(f);
-            
+
             if(this.remove){
                 for(var id in af) {
                     if(typeof id != "function") {
@@ -126,16 +126,16 @@ Ext.onReady(function(){
                             n.parentNode.removeChild(n);
                         }
                     }
-                } 
+                }
             }
         } // eo function filterBy
         // }}}
-        
+
     }); // eo extend
 
-    
-    
-    function fillTreeFiles(res){     
+
+
+    function fillTreeFiles(res){
         // Load files tree with the working copy
         /* ---- Begin side_navbar tree --- */
         Ext.namespace('Ext.ux');
@@ -204,7 +204,7 @@ Ext.onReady(function(){
         Ext.reg('FilterTree', Ext.ux.FilterTree);
 
         tree = new Ext.ux.FilterTree();
-        //tree.expandAll(); 
+        //tree.expandAll();
         tree.collapseAll();
         //tree.getRootNode().expand();
         tabPanelWest.add(tree);
@@ -218,13 +218,13 @@ Ext.onReady(function(){
             waitMsgTarget: true,
             frame:true,
             defaultType: 'textfield',
-            items: [        
+            items: [
                 new Ext.form.ComboBox({
                     fieldLabel: 'Version control',
                     hiddenName:'vcCmd',
                     store: new Ext.data.ArrayStore({
                         fields: ['vc','vcCmd'],
-                        data : [['Mercurial','hg clone'],['Git','git clone'],['Subversion','svn co']]  
+                        data : [['Mercurial','hg clone'],['Git','git clone'],['Subversion','svn co']]
                     }),
                     valueField:'vcCmd',
                     displayField:'vc',
@@ -249,7 +249,7 @@ Ext.onReady(function(){
                     width:190
                 }
             ]
-            
+
         });
 
         // explicit add
@@ -269,14 +269,14 @@ Ext.onReady(function(){
                     Ext.Msg.alert('Failure', action.result.msg);
                 }
             });
-        }    
+        }
 
         var submit = new Ext.Button({
             text: 'Submit',
             disabled:false,
             handler: submitForm
         });
-        
+
         var map = new Ext.KeyMap(Ext.getDoc(), {
             key: Ext.EventObject.ENTER,
             fn: submitForm,
@@ -312,7 +312,7 @@ Ext.onReady(function(){
         //appnamePath = getUrlParam('appath');
         syncProject('load');
     }
-    
+
     var aEditors = {};
     var tabs = new Ext.TabPanel({
         resizeTabs:true, // turn on tab resizing
@@ -368,7 +368,7 @@ Ext.onReady(function(){
                 }
             }
         }).show();
-        
+
         var editorStyleFiles = ["/static/codemirror/xmlcolors_on_white.css", "/static/codemirror/jscolors_on_white.css", "/static/codemirror/csscolors_on_white.css"];
         var editorParserFiles = ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"];
         var fileExtension = (/[.]/.exec(filePath)) ? /[^.]+$/.exec(filePath) : undefined;
@@ -387,7 +387,7 @@ Ext.onReady(function(){
                 editorParserFiles = ["parsepython.js"];
                 parserCfg = {'pythonVersion': 2, 'strictErrors': true};
                 break;
-                    }        
+                    }
         aEditors[id] = CodeMirror.fromTextArea('textarea_'+id, {
             stylesheet: editorStyleFiles,
             parserfile: editorParserFiles,
@@ -398,33 +398,33 @@ Ext.onReady(function(){
             textWrapping: false,
             lineNumbers: true,
             indentUnit: 4,
-            
-            
+
+
             breakPoints: false,
             iframeClass: 'editorCode',
             parserConfig: parserCfg
         });
-        
+
         // Shortcuts on canvas
-        var iFrame = aEditors[id].frame;        
+        var iFrame = aEditors[id].frame;
         if (iFrame.attachEvent) {
             iFrame.attachEvent('onkeydown', onkeydown_handler);
         } else if (iFrame.addEventListener) {
             iFrame.contentWindow.document.addEventListener('keydown', onkeydown_handler, false);
         } else {
             iFrame.onmouseover = onkeydown_handler;
-        }     
+        }
     }
     new Ext.Button({
         text: 'Add Tab',
         handler: addTab,
         iconCls:'new-tab'
     }).render(document.body, 'tabs');
-    
+
     // Setup a variable for the current directory
     var current_directory = '';
-    
-    
+
+
     var findGrid = new Ext.grid.GridPanel({
         store: new Ext.data.ArrayStore({
             fields: ['context','location'],
@@ -460,7 +460,7 @@ Ext.onReady(function(){
             }
         }
     });
-    
+
     var consolePanel = new Ext.Panel({
         // lazily created panel (xtype:'panel' is default)
         region: 'south',
@@ -483,7 +483,7 @@ Ext.onReady(function(){
             ]
         })
     });
-    
+
     var viewport = new Ext.Viewport({
         layout: 'border',
         items: [
@@ -519,10 +519,10 @@ Ext.onReady(function(){
                             }
                         ]
                     }
-                    
+
                 }]
             }),
-            consolePanel, 
+            consolePanel,
             {
                 region: 'east',
                 title: 'Properties',
@@ -574,16 +574,16 @@ Ext.onReady(function(){
             tabs
         ]
     });
-    
+
     if(!openNewProject){
         fillTreeFiles();
         Ext.getBody().unmask();
     }
-    
+
     function onCheckoutFinished() {
         window.location = appname;
     }
-    
+
     function onButtonSaveClick(){
         syncProject('save');
     }
@@ -598,9 +598,9 @@ Ext.onReady(function(){
         Ext.Msg.show({
             title:'Feature not available',
             msg: 'This feature is pending to do in next releases.',
-        });               
+        });
         */
-        
+
         Ext.Msg.prompt('Keywords', 'Please enter text to find:', function(btn, keywords){
             if (btn == 'ok' && !isEmpty(keywords)){
                 Ext.getBody().mask('Searching...', 'x-mask-loading');
@@ -619,26 +619,26 @@ Ext.onReady(function(){
                 });
             }
         });
-        
+
     }
     function onStyleChange(item, checked){
         if (checked)
             setActiveStyleSheet(item.value);
     }
-    
+
     function saveLocalStorage(){
         // Push local storage data to server
         for (var id in aEditors) {
             saveEditorContentToLocalStorage(id);
-        }    
+        }
     }
-    
+
     function saveEditorContentToLocalStorage(id){
         if (aEditors.hasOwnProperty(id) && (aEditors[id].getCode() != localStorage.getItem(id))) {
             localStorage.setItem(id, aEditors[id].getCode());
         }
     }
-    
+
     function syncEditor(filePath){
         var id = encodeURIComponent(filePath);
         if(null==localStorage.getItem(id)) {
@@ -670,7 +670,7 @@ Ext.onReady(function(){
             });
         }
     }
-    
+
     function syncProject(action) {
         switch(action) {
             case 'load':
@@ -679,7 +679,7 @@ Ext.onReady(function(){
                     url: 'model-editor',
                     params: { cmd: 'getMeta', app_name: appname },
                     success: function(metaServerObj){
-                        metaServer = metaServerObj.responseText; 
+                        metaServer = metaServerObj.responseText;
                         var lsMeta = localStorage[appname+'_meta'];
                         if(lsMeta!=metaServer) {
                             // Get remote files based on metadata
@@ -702,14 +702,14 @@ Ext.onReady(function(){
                             //aEditors[id].jumpToLine(aEditors[id].nthLine(aMeta['open_files'][id]));
                         }
                         tabs.setActiveTab(tabs.getItem(aMeta['active_file']));
-                        
-                    }, 
-                    failure: function(){              
-                        Ext.Msg.alert('Sync', 'Offline mode: It is not possible to connect to server, there may be connection problems, please try again later');
+
+                    },
+                    failure: function(){
+                        Ext.Msg.alert('Sync', 'Offline mode or Installation issue (check /metafiles/ subdir exists and has correct permissions): It is not possible to connect to server, there may be connection problems, please try again later');
                     }
                 });
                 break;
-                    
+
                     case 'save':
                 Ext.getBody().mask('Saving project...', 'x-mask-loading');
                 var arrIdsModifiedFiles = actualizaIdsModifiedFiles();
@@ -723,7 +723,7 @@ Ext.onReady(function(){
                         if(lsMeta==metaServer) {
                             var aMetaToSend = (lsMeta.length==0)?{"versions":{}, "open_files":{}, "active_file":""}:Ext.util.JSON.decode(lsMeta);
                             var aDataToSend = {};
-                            
+
                             // Update meta and data arrays
                             for (var i=0; i<arrIdsModifiedFiles.length; i++) {
                                 if(arrIdsModifiedFiles[i] in aMetaToSend['versions']){
@@ -748,8 +748,9 @@ Ext.onReady(function(){
                                         localStorage[appname+'_meta'] = aMetaToSendSerialized;
                                         localStorage.removeItem('IdsModifiedFiles');
                                     },
-                                    failure: function(){
-                                        Ext.Msg.alert('Sync', 'It is not possible to connect to server, try again later');
+                                    failure: function(response, opts){
+                                        Ext.Msg.alert('Sync', 'Connection error: ' + response.status + ' ' + str(opts));
+                                        //Ext.Msg.alert('Sync', 'It is not possible to connect to server, try again later');
                                     }
                                 });
                             }
@@ -772,15 +773,15 @@ Ext.onReady(function(){
                         }
                     },
                     failure: function() {
-                        Ext.Msg.alert('Sync', 'Offline mode: It is not possible to connect to server, try again later');
+                        Ext.Msg.alert('Sync', 'Offline mode or Installation issue (check /metafiles/ subdir exists and has correct permissions): It is not possible to connect to server, try again later');
                     }
                 });
-                break;                    
+                break;
                     }
         Ext.getBody().unmask();
-        
+
     }
-    
+
     function actualizaIdsModifiedFiles() {
         var jsonData = Ext.util.JSON.decode(localStorage.getItem('IdsModifiedFiles'));
         var arrIds = (jsonData!=null)?jsonData:Array();
@@ -793,7 +794,7 @@ Ext.onReady(function(){
         localStorage.setItem('IdsModifiedFiles', Ext.util.JSON.encode(arrIds));
         return arrIds;
     }
-    
+
     function updateUI() {
         // Update editor wit local storage data
         for (var id in aEditors) {
@@ -802,7 +803,7 @@ Ext.onReady(function(){
             }
         }
     }
-    
+
     function isEmpty(map) {
         for(var key in map) {
             if (map.hasOwnProperty(key)) {
@@ -811,7 +812,7 @@ Ext.onReady(function(){
         }
         return true;
     }
-    
+
     function setActiveStyleSheet(title) {
         var i,
             a,
