@@ -11,6 +11,7 @@ Installation
 - Add to INSTALLED_APPS
 - Add urls.py
 - Optionally add DJIDE_FILTER_EXTENSIONS to settings, default is ['pyc', 'pyo', 'py~']
+- Don't forget ./manage.py collectstatic -l
 
 
 Recent fixes & updates
