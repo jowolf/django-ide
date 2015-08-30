@@ -1,13 +1,15 @@
 <html>
     <head>
-        <title>DjangoIDE</title>
+        <title>eRacks Django IDE</title>
+        {% comment %}
         <link  href="http://fonts.googleapis.com/css?family=Gruppo:regular&v1" rel="stylesheet" type="text/css" >
         <link  href="http://fonts.googleapis.com/css?family=Maven+Pro:400,500,700,900&v1" rel="stylesheet" type="text/css" >
         <link  href="http://fonts.googleapis.com/css?family=Gruppo:regular&v1" rel="stylesheet" type="text/css" >
+        {% endcomment %}
         <style>
             body {
-                font-family: 'Gruppo', serif;
-                font-size: 36px;
+                /* font-family: 'Gruppo', serif; */
+                font-size: 18px;
                 font-style: normal;
                 font-weight: 400;
                 text-shadow: none;
@@ -20,7 +22,7 @@
         </style>
     </head>
     <body>
-        <h1>django - installed apps:</h1>
+        <h1>eRacks django IDE - installed apps:</h1>
         <ul>
             {% for name in apps %}
             <li>

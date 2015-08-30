@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test  # login_required,
+from django.apps import apps
 
 @csrf_exempt
 @user_passes_test(lambda u: u.is_staff  )
@@ -91,9 +92,10 @@ def edit(request):
         return render_to_response('ide.html', {'app_name':app_name})
     else:
         a=[]
-        for app in settings.INSTALLED_APPS:
-            mod = __import__(app)
-            a += [mod.__name__]
+        #for app in settings.INSTALLED_APPS:
+        for mod in apps.get_apps():
+            #mod = __import__(app)
+            a += [mod.__name__ [:-7]]  # strip off '.models'
         return render_to_response('index.html', {'apps':list(set(a))})
 
 def setMetaFile(app_name, metaData):
