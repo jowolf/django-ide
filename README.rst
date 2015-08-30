@@ -1,4 +1,36 @@
-===========
+=================
+eRacks Django-IDE
+=================
+
+Fork of lusob's Django-IDE, with updates for newer Django versions, stability fixes, enhancements, etc -JJW.
+
+Installation
+============
+
+- pip install -e git+https://github.com/jowolf/django-ide.git#egg=django-ide
+- Add to INSTALLED_APPS
+- Add urls.py
+- Optionally add DJIDE_FILTER_EXTENSIONS to settings, default is ['pyc', 'pyo', 'py~']
+
+
+Recent fixes & updates
+======================
+
+- Properly loop through apps using newer Django functions for this purpose (1.7x)
+- Permanently store metafiles dir with proper permissions in Git, as it's required for proper operation
+- Debug & tracing writes
+- Display more informative errors & exceptions if/when they occur
+- Differentiate look & feel, remove custom fonts, adjust size
+- Add filter option to filter out .pyc, .pyo, .py~ by default
+
+Issues
+======
+
+Please add suggestions, enhancements, bugs, etc to Issues as you wish, I will try to address them timely - JJW
+
+
+Here's the original lusob README:
+
 Django-IDE
 ===========
 
