@@ -1,4 +1,4 @@
-import os,sys, json, urllib, urllib2
+import os, sys, json, urllib, urllib2
 from os.path import join
 
 from django.template import RequestContext
@@ -11,6 +11,8 @@ from django.apps import apps
 
 trace = 0
 
+filter_extensions = getattr (settings, 'DJIDE_FILTER_EXTENSIONS', ['pyc', 'pyo', 'py~'])
+
 @csrf_exempt
 @user_passes_test(lambda u: u.is_staff  )
 def tree_data(request):
@@ -21,6 +23,8 @@ def tree_data(request):
     response=[]
     rootNode=os.path.join(projectRoot,node)
     for name in os.listdir(rootNode):
+        if name.split('.') [-1] in filter_extensions: 
+          continue
         fullpath = os.path.join(rootNode, name)
         relativePath = os.path.join(request.POST.get('node'), name)
         if os.path.isfile(fullpath):
