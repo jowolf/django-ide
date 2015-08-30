@@ -9,6 +9,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test  # login_required,
 from django.apps import apps
 
+trace = 0
+
 @csrf_exempt
 @user_passes_test(lambda u: u.is_staff  )
 def tree_data(request):
@@ -112,13 +114,13 @@ def setMetaFile(app_name, metaData):
 def setDataFile(id, fileContent, rootPath):
     try:
         fullPathName = os.path.join(rootPath, urllib.unquote_plus(id))
-        print "Opening file:", fullPathName
+        if trace: print "Opening file:", fullPathName
         handle = open(fullPathName, 'w')
-        print "Writing file, handle:", handle
+        if trace: print "Writing file, handle:", handle
         handle.write(fileContent.encode('UTF-8'))
-        print "File written, closing"
+        if trace: print "File written, closing"
         handle.close()
-        print "Closed"
+        if trace: print "Closed"
     except IOError, e:
         print e, id
         return HttpResponseBadRequest('File exception: %s (%s)' % (e, urllib.unquote_plus(id))) # , status=500)
