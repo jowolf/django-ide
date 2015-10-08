@@ -23,7 +23,7 @@ def tree_data(request):
     response=[]
     rootNode=os.path.join(projectRoot,node)
     for name in os.listdir(rootNode):
-        if name.split('.') [-1] in filter_extensions: 
+        if name.split('.') [-1] in filter_extensions:
           continue
         fullpath = os.path.join(rootNode, name)
         relativePath = os.path.join(request.POST.get('node'), name)
@@ -102,7 +102,7 @@ def edit(request):
         for mod in apps.get_apps():
             #mod = __import__(app)
             a += [mod.__name__ [:-7]]  # strip off '.models'
-        return render_to_response('index.html', {'apps':list(set(a))})
+        return render_to_response('ide-index.html', {'apps':list(set(a))})
 
 def setMetaFile(app_name, metaData):
     IDE_PATH = os.path.dirname(os.path.abspath(__file__))
